@@ -3,8 +3,8 @@ name: Build and Push Docker image
 on:
   push:
     branches: [minor, ci-arch-build-test]
-  release:
-    types: [published]
+    tags:
+      - 'v*' # Push events to version tags like v1.2.3
 
 env:
   IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/beammp-server
@@ -32,22 +32,56 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Docker metadata
+        id: meta_full
+        uses: docker/metadata-action@v5
+        with:
+          images:
+              uses: docker/metadata-action@v5
+              with:
+                images: ${{ env.IMAGE_NAME }}
+                tags: |
+                  # For  to the develop branch, tag as 'nightly'
+                  type=raw,value=nightly,enable=${{ github.ref == 'refs/heads/ci-arch-build-test' }}
+                  # For pushes of v* tags, create 'latest' and version tags (e.g., v1.2.3)
+                  type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+                  type=semver,pattern={{version}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
       - name: Build and push Docker image
+        id: build-and-push
         uses: docker/build-push-action@v5
         with:
           context: .
           push: true
+          tags: ${{ steps.meta_full.outputs.tags }}
+          labels: ${{ steps.meta_full.outputs.labels }}
+          # Generate a cache key based on the branch/tag and the Dockerfile hash
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Extract metadata for slim image
+        id: meta_slim
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.IMAGE_NAME }}
           tags: |
-            ${{ env.IMAGE_NAME }}:latest
-            ${{ env.IMAGE_NAME }}:${{ github.sha }}
+            # For pushes to the develop branch, tag as 'nightly-slim'
+            type=raw,value=nightly-slim,enable=${{ github.ref == 'refs/heads/develop' }}
+            # For pushes of v* tags, create 'slim' and version-slim tags (e.g., v1.2.3-slim)
+            type=raw,value=slim,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=semver,pattern={{version}}-slim,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
       - name: Set up slim image
         uses: kitabisa/docker-slim-action@v1
         env:
           DSLIM_HTTP_PROBE: false
         with:
-          target: ${{ env.IMAGE_NAME }}:${{ github.sha }}
-          tag: ${{ github.sha }}-slim
-      - name: Push slim image
+          target: ${{ env.IMAGE_NAME }}@${{ steps.build-and-push.outputs.digest }}
+          tag: temp-slim
+      - name: Tag and push slim images
         run: |
-          docker tag ${{ env.IMAGE_NAME }}:${{ github.sha }}-slim ${{ env.IMAGE_NAME }}:latest-slim 
-          docker push ${{ env.IMAGE_NAME }} --all-tags
+          echo "The following slim tags will be pushed: ${{ steps.meta_slim.outputs.tags }}"
+          for tag in ${{ steps.meta_slim.outputs.tags }}; do
+            echo "Tagging and pushing: ${tag}"
+            docker tag ${{ env.IMAGE_NAME }}:temp-slim "${tag}"
+            docker push "${tag}"
+          done
+
