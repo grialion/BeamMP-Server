@@ -118,7 +118,7 @@ find_package(libzip CONFIG REQUIRED)
 find_package(RapidJSON CONFIG REQUIRED)
 find_package(sol2 CONFIG REQUIRED)
 find_package(CURL CONFIG REQUIRED)
-add_subdirectory("deps/toml11")
+find_package(toml11 CONFIG REQUIRED)
 
 include_directories(include)
 
