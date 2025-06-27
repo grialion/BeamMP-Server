@@ -30,10 +30,12 @@ FROM debian:12-slim
 COPY scripts /scripts
 RUN bash /scripts/debian-12/4-install-runtime-deps.sh
 
+RUN mkdir /config && \
+    mkdir /resources
 WORKDIR /app
 
-COPY --from=builder /src/bin/BeamMP-Server /app/BeamMP-Server
+COPY --from=builder /src/bin/BeamMP-Server /bin/BeamMP-Server
 
 EXPOSE 30814
 
-CMD ["./BeamMP-Server"]
+CMD ["/bin/BeamMP-Server --config=/config/ServerConfig.toml"]
