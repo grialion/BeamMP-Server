@@ -18,6 +18,8 @@ RUN bash /scripts/debian-12/1-install-deps.sh
 
 COPY . .
 
+RUN git submodule update --init --recursive
+
 RUN bash ./scripts/debian-12/1.5-git-safe.sh
 RUN bash ./scripts/debian-12/2-configure.sh
 RUN bash ./scripts/debian-12/3-build.sh
