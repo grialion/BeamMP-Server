@@ -36,16 +36,13 @@ jobs:
         id: meta_full
         uses: docker/metadata-action@v5
         with:
-          images:
-              uses: docker/metadata-action@v5
-              with:
-                images: ${{ env.IMAGE_NAME }}
-                tags: |
-                  # For  to the develop branch, tag as 'nightly'
-                  type=raw,value=nightly,enable=${{ github.ref == 'refs/heads/ci-arch-build-test' }}
-                  # For pushes of v* tags, create 'latest' and version tags (e.g., v1.2.3)
-                  type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
-                  type=semver,pattern={{version}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+          images: ${{ env.IMAGE_NAME }}
+          tags: |
+            # For  to the develop branch, tag as 'nightly'
+            type=raw,value=nightly,enable=${{ github.ref == 'refs/heads/ci-arch-build-test' }}
+            # For pushes of v* tags, create 'latest' and version tags (e.g., v1.2.3)
+            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
+            type=semver,pattern={{version}},enable=${{ startsWith(github.ref, 'refs/tags/v') }}
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@v5
