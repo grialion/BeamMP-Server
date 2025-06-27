@@ -1,7 +1,5 @@
 name: Build and Push Docker image
 
-runs-on: self-hosted
-
 on:
   push:
     branches: [minor, ci-arch-build-test]
@@ -13,7 +11,9 @@ env:
 
 jobs:
   build-and-push:
-    runs-on: debian-12
+    #runs-on: debian-12
+    runs-on: [self-hosted, x64]
+
     permissions:
       contents: read
       packages: write
