@@ -1,5 +1,7 @@
 name: Build and Push Docker image
 
+runs-on: self-hosted
+
 on:
   push:
     branches: [minor, ci-arch-build-test]
