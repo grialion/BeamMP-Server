@@ -25,6 +25,9 @@ jobs:
     container:
       image: ${{ matrix.distro }}:${{ matrix.version }}
     steps:
+      - name: Install Dependencies
+        run: bash ./scripts/${{ matrix.distro }}-${{ matrix.version }}/1-install-deps.sh
+
       - name: get-cmake
         uses: lukka/get-cmake@v3.28.1
             
@@ -36,9 +39,8 @@ jobs:
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
       - uses: actions/checkout@v2
-
-      - name: Install Dependencies
-        run: bash ./scripts/${{ matrix.distro }}-${{ matrix.version }}/1-install-deps.sh
+        with:
+          submodules: 'recursive'
 
       - name: Git config safe directory
         shell: bash
