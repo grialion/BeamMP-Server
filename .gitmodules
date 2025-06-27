@@ -4,3 +4,7 @@
 [submodule "vcpkg"]
 	path = vcpkg
 	url = https://github.com/Microsoft/vcpkg.git
+[submodule "sol2"]
+	path = deps/sol2
+	url = https://github.com/nyllet/sol2.git
+	branch = develop

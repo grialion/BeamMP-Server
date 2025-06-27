@@ -119,6 +119,7 @@ find_package(RapidJSON CONFIG REQUIRED)
 find_package(sol2 CONFIG REQUIRED)
 find_package(CURL CONFIG REQUIRED)
 find_package(toml11 CONFIG REQUIRED)
+add_subdirectory(deps/sol2)
 
 include_directories(include)
 
