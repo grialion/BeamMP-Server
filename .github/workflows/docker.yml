@@ -36,7 +36,18 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          push: true
+          push: false
           tags: |
             ${{ env.IMAGE_NAME }}:latest
             ${{ env.IMAGE_NAME }}:${{ github.sha }}
+      - name: Set up slim image
+        uses: kitabisa/docker-slim-action@v1
+        env:
+          DSLIM_HTTP_PROBE: false
+        with:
+          target: ${{ env.IMAGE_NAME }}:${{ github.sha }}
+          tag: ${{ github.sha }}-slim
+      - name: Push slim image
+        run: |
+          docker tag ${{ env.IMAGE_NAME }}:${{ github.sha }}-slim ${{ env.IMAGE_NAME }}:latest-slim 
+          docker push ${{ env.IMAGE_NAME }} --all-tags
