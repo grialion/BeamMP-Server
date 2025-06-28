@@ -38,4 +38,4 @@ COPY --from=builder /src/bin/BeamMP-Server /bin/BeamMP-Server
 
 EXPOSE 30814
 
-CMD ["/bin/BeamMP-Server --config=/config/ServerConfig.toml"]
+CMD ["/bin/BeamMP-Server", "--config=/config/ServerConfig.toml"]
