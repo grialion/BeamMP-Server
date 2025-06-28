@@ -60,6 +60,7 @@ jobs:
         with:
           context: .
           push: true
+          load: true
           tags: ${{ steps.meta_full.outputs.tags }}
           labels: ${{ steps.meta_full.outputs.labels }}
       - name: Tag built image for slimming
