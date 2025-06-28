@@ -5,7 +5,7 @@ on:
     branches:
       - 'develop'
       - 'minor'
-      - 'ci-arch-build-test'
+      #- 'ci-arch-build-test'
   pull_request:
 
 env: 
