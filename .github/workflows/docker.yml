@@ -82,9 +82,11 @@ jobs:
           tag: to
       - name: Tag and push slim images
         run: |
+          set -ex
+          tags="${{ steps.meta_slim.outputs.tags }}"
           echo "The following slim tags will be pushed: ${{ steps.meta_slim.outputs.tags }}"
-          for tag in ${{ steps.meta_slim.outputs.tags }}; do
+          while IFS= read -r tag; do
             echo "Tagging and pushing: ${tag}"
             docker tag slim:to "${tag}"
             docker push "${tag}"
-          done
+          done <<< "$tags"
