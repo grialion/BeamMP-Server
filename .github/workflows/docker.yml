@@ -62,18 +62,20 @@ jobs:
           push: true
           tags: ${{ steps.meta_full.outputs.tags }}
           labels: ${{ steps.meta_full.outputs.labels }}
+      - name: Tag built image for slimming
+        run: docker tag ${{ steps.build-and-push.imageid }} slim:from
       - name: Set up slim image
         uses: kitabisa/docker-slim-action@v1
         env:
           DSLIM_HTTP_PROBE: false
         with:
-          target: ${{ env.IMAGE_NAME }}@${{ steps.build-and-push.outputs.digest }}
-          tag: temp-slim
+          target: slim:from
+          tag: to
       - name: Tag and push slim images
         run: |
           echo "The following slim tags will be pushed: ${{ steps.meta_slim.outputs.tags }}"
           for tag in ${{ steps.meta_slim.outputs.tags }}; do
             echo "Tagging and pushing: ${tag}"
-            docker tag ${{ env.IMAGE_NAME }}:temp-slim "${tag}"
+            docker tag slim:to "${tag}"
             docker push "${tag}"
           done
