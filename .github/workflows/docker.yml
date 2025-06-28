@@ -64,9 +64,8 @@ jobs:
           tags: ${{ steps.meta_full.outputs.tags }}
           labels: ${{ steps.meta_full.outputs.labels }}
       - name: Tag built image for slimming
-        env:
-          IMG: ${{ env.IMAGE_NAME }}@${{ steps.build_and_push.outputs.imageid }}
         run: |
+          IMG=${{ env.IMAGE_NAME }}@${{ steps.build_and_push.outputs.imageid }}
           docker pull "$IMG"
           docker tag "$IMG" slim:from
       - name: Set up slim image
