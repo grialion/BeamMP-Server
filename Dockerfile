@@ -14,27 +14,27 @@ RUN LATEST_VERSION=$(wget -qO- https://api.github.com/repos/Kitware/CMake/releas
 RUN rm -f cmake-install.sh
 
 COPY scripts /scripts
-# RUN bash /scripts/debian-12/1-install-deps.sh
-# 
-# COPY . .
-# 
-# RUN git submodule update --init --recursive
-# 
-# RUN bash ./scripts/debian-12/1.5-git-safe.sh
-# RUN bash ./scripts/debian-12/2-configure.sh
-# RUN bash ./scripts/debian-12/3-build.sh
+RUN bash /scripts/debian-12/1-install-deps.sh
+
+COPY . .
+
+RUN git submodule update --init --recursive
+
+RUN bash ./scripts/debian-12/1.5-git-safe.sh
+RUN bash ./scripts/debian-12/2-configure.sh
+RUN bash ./scripts/debian-12/3-build.sh
 
 
 FROM debian:12-slim
 
-# COPY scripts /scripts
-# RUN bash /scripts/debian-12/4-install-runtime-deps.sh
-# 
-# RUN mkdir /config && \
-#     mkdir /resources
-# WORKDIR /app
-# 
-# COPY --from=builder /src/bin/BeamMP-Server /bin/BeamMP-Server
+COPY scripts /scripts
+RUN bash /scripts/debian-12/4-install-runtime-deps.sh
+
+RUN mkdir /config && \
+    mkdir /resources
+WORKDIR /app
+
+COPY --from=builder /src/bin/BeamMP-Server /bin/BeamMP-Server
 
 EXPOSE 30814
 
