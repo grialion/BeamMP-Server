@@ -55,7 +55,7 @@ jobs:
             type=raw,value=slim,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
             type=semver,pattern={{version}},suffix=-slim,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
       - name: Build and push Docker image
-        id: build-and-push
+        id: build_and_push
         uses: docker/build-push-action@v5
         with:
           context: .
@@ -63,7 +63,9 @@ jobs:
           tags: ${{ steps.meta_full.outputs.tags }}
           labels: ${{ steps.meta_full.outputs.labels }}
       - name: Tag built image for slimming
-        run: docker tag ${{ steps.build-and-push.imageid }} slim:from
+        run: |
+          docker images
+          docker tag ${{ steps.build_and_push.imageid }} slim:from
       - name: Set up slim image
         uses: kitabisa/docker-slim-action@v1
         env:
