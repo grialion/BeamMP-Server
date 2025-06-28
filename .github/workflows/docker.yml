@@ -38,6 +38,8 @@ jobs:
         with:
           images: ${{ env.IMAGE_NAME }}
           tags: |
+            # always tag sha value
+            type=raw,value=${{ github.sha }}
             # For  to the develop branch, tag as 'nightly'
             type=raw,value=nightly,enable=${{ github.ref == 'refs/heads/ci-arch-build-test' }}
             # For pushes of v* tags, create 'latest' and version tags (e.g., v1.2.3)
@@ -49,6 +51,8 @@ jobs:
         with:
           images: ${{ env.IMAGE_NAME }}
           tags: |
+            # always tag sha value
+            type=raw,value=${{ github.sha }}-slim
             # For pushes to the develop branch, tag as 'nightly-slim'
             type=raw,value=nightly-slim,enable=${{ github.ref == 'refs/heads/ci-arch-build-test' }}
             # For pushes of v* tags, create 'slim' and version-slim tags (e.g., v1.2.3-slim)
@@ -66,7 +70,7 @@ jobs:
       - name: Tag built image for slimming
         run: |
           set -ex
-          IMG=${{ env.IMAGE_NAME }}@${{ steps.build_and_push.outputs.imageid }}
+          IMG=${{ env.IMAGE_NAME }}:${{ github.sha }}
           docker pull "$IMG"
           docker tag "$IMG" slim:from
       - name: Set up slim image
