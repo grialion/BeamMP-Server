@@ -58,7 +58,7 @@ jobs:
 
       - name: Get vcpkg hash
         id: vcpkg_hash
-        run: echo "hash=$(git rev-parse HEAD:mysubmodule)" >> $GITHUB_OUTPUT
+        run: echo "hash=$(git rev-parse HEAD:vcpkg)" >> $GITHUB_OUTPUT
 
       - name: Cache vcpkg packages
         uses: actions/cache@v4

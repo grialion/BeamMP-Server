@@ -61,7 +61,7 @@ jobs:
             type=semver,pattern={{version}},suffix=-slim,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
       - name: Get vcpkg hash
         id: vcpkg_hash
-        run: echo "hash=$(git rev-parse HEAD:mysubmodule)" >> $GITHUB_OUTPUT
+        run: echo "hash=$(git rev-parse HEAD:vcpkg)" >> $GITHUB_OUTPUT
       - name: Cache vcpkg_installed
         uses: actions/cache@v4
         id: cache
