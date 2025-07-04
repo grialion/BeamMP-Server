@@ -43,9 +43,6 @@ jobs:
             core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
-      - name: Install git
-        run: (apt update -y && apt install -y git) || pacman -Sy --noconfirm git
-
       - uses: actions/checkout@v2
         with:
           submodules: 'recursive'
@@ -111,9 +108,6 @@ jobs:
           script: |
             core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
-
-      - name: Install git
-        run: apt update -y && apt install -y git
 
       - uses: actions/checkout@v2
         with:
