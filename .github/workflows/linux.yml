@@ -33,10 +33,6 @@ jobs:
     container:
       image: ${{ matrix.distro }}:${{ matrix.version }}
     steps:
-      - run: bash git --version
-      - name: Install Dependencies
-        run: bash ./scripts/${{ matrix.distro }}-${{ matrix.version }}/1-install-deps.sh
-
       - name: Export GitHub Actions cache environment variables
         uses: actions/github-script@v6
         with:
@@ -44,9 +40,15 @@ jobs:
             core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
+      - name: Install git
+        run: (apt update -yq && apt install -yq git) || pacman -Syq --noconfirm git
+
       - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
+
+      - name: Install Dependencies
+        run: bash ./scripts/${{ matrix.distro }}-${{ matrix.version }}/1-install-deps.sh
 
       - name: get-cmake
         uses: lukka/get-cmake@v4.0.3
@@ -104,10 +106,6 @@ jobs:
     container:
       image: ${{ matrix.distro }}:${{ matrix.version }}
     steps:
-      - run: bash git --version
-      - name: Install Dependencies
-        run: bash ./scripts/${{ matrix.distro }}-${{ matrix.version }}/1-install-deps.sh
-
       - name: Export GitHub Actions cache environment variables
         uses: actions/github-script@v6
         with:
@@ -115,9 +113,15 @@ jobs:
             core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
+      - name: Install git
+        run: (apt update -yq && apt install -yq git) || pacman -Syq --noconfirm git
+
       - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
+
+      - name: Install Dependencies
+        run: bash ./scripts/${{ matrix.distro }}-${{ matrix.version }}/1-install-deps.sh
 
       - name: get-cmake
         uses: lukka/get-cmake@v4.0.3
