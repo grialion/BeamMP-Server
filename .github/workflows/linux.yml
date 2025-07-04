@@ -16,7 +16,7 @@ env:
 
 jobs:
   x86_64-matrix:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         include:
@@ -34,7 +34,7 @@ jobs:
       image: ${{ matrix.distro }}:${{ matrix.version }}
     steps:
       - name: get-cmake
-        uses: lukka/get-cmake@v3.28.1
+        uses: lukka/get-cmake@v4.0.3
             
       - name: Export GitHub Actions cache environment variables
         uses: actions/github-script@v6
@@ -43,7 +43,7 @@ jobs:
             core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
 
@@ -78,7 +78,7 @@ jobs:
         run: ./bin/BeamMP-Server-tests
 
   arm64-matrix:
-    runs-on: ubuntu-22.04-arm
+    runs-on: ubuntu-latest-arm
     env:
       VCPKG_DEFAULT_TRIPLET: "arm64-linux"
     strategy:
@@ -96,7 +96,7 @@ jobs:
       image: ${{ matrix.distro }}:${{ matrix.version }}
     steps:
       - name: get-cmake
-        uses: lukka/get-cmake@v3.28.1
+        uses: lukka/get-cmake@v4.0.3
             
       - name: Export GitHub Actions cache environment variables
         uses: actions/github-script@v6
@@ -105,7 +105,7 @@ jobs:
             core.exportVariable('ACTIONS_CACHE_URL', process.env.ACTIONS_CACHE_URL || '');
             core.exportVariable('ACTIONS_RUNTIME_TOKEN', process.env.ACTIONS_RUNTIME_TOKEN || '');
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
           submodules: 'recursive'
 
