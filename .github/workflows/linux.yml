@@ -92,7 +92,7 @@ jobs:
         run: ./bin/BeamMP-Server-tests
 
   arm64-matrix:
-    runs-on: ubuntu-latest-arm
+    runs-on: ubuntu-22.04-arm
     env:
       VCPKG_DEFAULT_TRIPLET: "arm64-linux"
     strategy:
