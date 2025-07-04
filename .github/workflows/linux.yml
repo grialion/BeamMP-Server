@@ -56,11 +56,15 @@ jobs:
       - name: get-cmake
         uses: lukka/get-cmake@v4.0.3
 
+      - name: Get vcpkg hash
+        id: vcpkg_hash
+        run: echo "hash=$(git rev-parse HEAD:mysubmodule)" >> $GITHUB_OUTPUT
+
       - name: Cache vcpkg packages
         uses: actions/cache@v4
         with:
           path: bin/vcpkg_installed
-          key: vcpkg-${{ matrix.distro }}-${{ matrix.version }}-x86_64-${{ hashFiles('vcpkg.json') }}
+          key: vcpkg-${{ matrix.distro }}-${{ matrix.version }}-x86_64-${{ hashFiles('vcpkg.json') }}-${{ steps.vcpkg_hash.outputs.hash }}
           restore-keys: |
             vcpkg-${{ matrix.distro }}-${{ matrix.version }}-x86_64-
 
@@ -136,7 +140,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: bin/vcpkg_installed
-          key: vcpkg-${{ matrix.distro }}-${{ matrix.version }}-arm64-${{ hashFiles('vcpkg.json') }}
+          key: vcpkg-${{ matrix.distro }}-${{ matrix.version }}-arm64-${{ hashFiles('vcpkg.json') }}-$(git rev-parse --short HEAD:vcpkg)
           restore-keys: |
             vcpkg-${{ matrix.distro }}-${{ matrix.version }}-arm64-
 

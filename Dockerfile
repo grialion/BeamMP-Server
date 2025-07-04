@@ -1,6 +1,7 @@
 FROM debian:12-slim AS builder
 
-WORKDIR /src
+ENV WORKDIR=/src
+WORKDIR ${WORKDIR}
 
 # Latest CMake
 RUN apt update && apt install -y \
@@ -21,8 +22,8 @@ COPY . .
 RUN git submodule update --init --recursive
 
 RUN bash ./scripts/debian-12/1.5-git-safe.sh
-RUN bash ./scripts/debian-12/2-configure.sh
-RUN bash ./scripts/debian-12/3-build.sh
+RUN --mount=type=cache,target=${WORKDIR}/bin/vcpkg_installed bash ./scripts/debian-12/2-configure.sh
+RUN --mount=type=cache,target=${WORKDIR}/bin/vcpkg_installed bash ./scripts/debian-12/3-build.sh
 
 
 FROM debian:12-slim
