@@ -59,21 +59,13 @@ jobs:
       - name: Cache vcpkg packages
         uses: actions/cache@v4
         with:
-          path: vcpkg_installed
+          path: bin/vcpkg_installed
           key: vcpkg-${{ matrix.distro }}-${{ matrix.version }}-x86_64-${{ hashFiles('vcpkg.json') }}
           restore-keys: |
             vcpkg-${{ matrix.distro }}-${{ matrix.version }}-x86_64-
 
       - name: Create Build Environment
         run: bash ./scripts/${{ matrix.distro }}-${{ matrix.version }}/2-configure.sh '-DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake'
-
-      - name: List files for debug
-        run: |
-          set -ex
-          ls -l
-          ls -l ./*
-      - name: List vcpkg_installed for debug
-        run: ls -l vcpkg_installed || echo "Not found"
 
       - name: Build Server
         run: bash ./scripts/${{ matrix.distro }}-${{ matrix.version }}/3-build.sh
@@ -89,13 +81,6 @@ jobs:
         with:
           name: debuginfo.${{ matrix.distro }}.${{ matrix.version }}.x86_64
           path: ./bin/BeamMP-Server.debug
-      - name: List files for debug
-        run: |
-          set -ex
-          ls -l
-          ls -l ./*
-      - name: List vcpkg_installed for debug
-        run: ls -l vcpkg_installed || echo "Not found"
 
       - name: Build Tests
         run: bash ./scripts/${{ matrix.distro }}-${{ matrix.version }}/3-build-tests.sh
@@ -150,20 +135,13 @@ jobs:
       - name: Cache vcpkg packages
         uses: actions/cache@v4
         with:
-          path: vcpkg_installed
+          path: bin/vcpkg_installed
           key: vcpkg-${{ matrix.distro }}-${{ matrix.version }}-arm64-${{ hashFiles('vcpkg.json') }}
           restore-keys: |
             vcpkg-${{ matrix.distro }}-${{ matrix.version }}-arm64-
 
       - name: Create Build Environment
         run: bash ./scripts/${{ matrix.distro }}-${{ matrix.version }}/2-configure.sh '-DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake'
-      - name: List files for debug
-        run: |
-          set -ex
-          ls -l
-          ls -l ./*
-      - name: List vcpkg_installed for debug
-        run: ls -l vcpkg_installed || echo "Not found"
 
       - name: Build Server
         run: bash ./scripts/${{ matrix.distro }}-${{ matrix.version }}/3-build.sh
@@ -188,10 +166,3 @@ jobs:
 
       - name: Test
         run: ./bin/BeamMP-Server-tests
-      - name: List files for debug
-        run: |
-          set -ex
-          ls -l
-          ls -l ./*
-      - name: List vcpkg_installed for debug
-        run: ls -l vcpkg_installed || echo "Not found"
