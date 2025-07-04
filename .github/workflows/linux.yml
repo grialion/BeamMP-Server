@@ -65,8 +65,6 @@ jobs:
         with:
           path: bin/vcpkg_installed
           key: vcpkg-${{ matrix.distro }}-${{ matrix.version }}-x86_64-${{ hashFiles('vcpkg.json') }}-${{ steps.vcpkg_hash.outputs.hash }}
-          restore-keys: |
-            vcpkg-${{ matrix.distro }}-${{ matrix.version }}-x86_64-
 
       - name: Create Build Environment
         run: bash ./scripts/${{ matrix.distro }}-${{ matrix.version }}/2-configure.sh '-DCMAKE_TOOLCHAIN_FILE=./vcpkg/scripts/buildsystems/vcpkg.cmake'
